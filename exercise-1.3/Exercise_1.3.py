@@ -69,13 +69,13 @@ for i in range(n) :
 
 # evaluate the difficulty of the recipe   
 for i in recipes_list :
-    if i["cooking_time"] < 10 & len(i["ingredients"]) < 4:
+    if i["cooking_time"] < 10 and len(i["ingredients"]) < 4:
         i["difficulty"] = "Easy"
-    elif i["cooking_time"] < 10 & len(i["ingredients"]) >= 4:
+    elif i["cooking_time"] < 10 and len(i["ingredients"]) >= 4:
         i["difficulty"] = "Medium"
-    elif i["cooking_time"] >= 10 & len(i["ingredients"]) < 4:
+    elif i["cooking_time"] >= 10 and len(i["ingredients"]) < 4:
         i["difficulty"] = "Intermediate"
-    elif i["cooking_time"] >= 10 & len(i["ingredients"]) >= 4:
+    elif i["cooking_time"] >= 10 and len(i["ingredients"]) >= 4:
         i["difficulty"] = "Hard"
 
 
