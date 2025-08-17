@@ -1,6 +1,7 @@
-a= int(input("Enter the first number:"))
-b= int(input("Enter the second number:"))
+import os
 
-c= a + b
+numbers = [str(numb) for numb in range(50, 101)]
+numbers = [n + "\n" for n in numbers]
 
-print("The sum is:", c)
+print(numbers)
+print(os.getcwd())
