@@ -1,28 +1,9 @@
 import pickle
 import sys
 
-# Initiate two variable list
-recipes_list = []
-ingredients_list = []
-
-# number of recipes to insert
-try:
-    n = int(input("How many recipes would you like to enter? "))
-    if n < 0 :
-        raise ValueError("Must be a positive number")
-except ValueError :
-    try:
-        n = int(input("Please enter a positive number: "))
-        if n < 0 :
-            print("Invalid input. Exiting program.")
-            sys.exit()
-    except ValueError:
-        print("Invalid input. Exiting program.")
-        sys.exit()  
-
 # function that take details of a recipe
 def take_recipe(i):
-    print(f"\nRecipe {i+1}: ")
+    print(f"\n---- Recipe {i+1} ---- ")
     name = str(input("Enter the name of the recipe: "))
 
     try:
@@ -54,10 +35,8 @@ def take_recipe(i):
             print("\nInvalid input. Exiting program.")
             sys.exit()
 
-
     difficulty = calc_difficulty(cooking_time, ingredients)
 
-    
     return {"name" : name, "cooking_time" : cooking_time, "ingredients" : ingredients, "difficulty" : difficulty}
     
 
@@ -74,15 +53,6 @@ def calc_difficulty(cooking_time, ingredients):
             difficulty = "Hard"
         return difficulty
 
-for i in range(n) :
-    recipe = take_recipe(i)
-    recipes_list.append(recipe)
-    for ing in recipe["ingredients"]:
-        if ing not in ingredients_list:
-            ingredients_list.append(ing)
-
-data = {"recipe_list" : recipes_list, "ingredients" : ingredients_list}
-
 
 filename = input("\nPlease enter the file you want to use: ")
 try:
@@ -90,26 +60,43 @@ try:
     data = pickle.load(file)
     print('\n---\nData loaded successfully.')
 except FileNotFoundError:
-    data = {"recipe_list" : recipes_list, "ingredients" : ingredients_list}
-    print("\n---\nFile not found. New data dictionary will be created and saved as {filename}.")
+    data = {"recipes_list" : [], "all_ingredients" : []}
+    print(f"\n---\nFile not found. New data dictionary will be created and saved as {filename}.")
 except:
-    data = {"recipe_list" : [], "ingredients" : []}
+    data = {"recipes_list" : [], "all_ingredients" : []}
     print("\n---\nAn error occured. New data dictionary created")
-else:
-    file.close()
-    print("\n---\nFile closed.")
-finally:
-    recipe_list = []
-    ingredients_list = []
-    for i in data["recipe_list"]:
-        recipe_list.append(i)
-    for i in data["ingredients"]:
-        ingredients_list.append(i)
-    file = open(filename, 'wb')
+
+
+# number of recipes to insert
+try:
+    n = int(input("\nHow many recipes would you like to enter? "))
+    if n < 0 :
+        raise ValueError("Must be a positive number")
+except ValueError :
+    try:
+        n = int(input("Please enter a positive number: "))
+        if n < 0 :
+            print("Invalid input. Exiting program.")
+            sys.exit()
+    except ValueError:
+        print("Invalid input. Exiting program.")
+        sys.exit()  
+
+for i in range(n) :
+    recipe = take_recipe(i)
+    data["recipes_list"].append(recipe)
+    for ing in recipe["ingredients"]:
+        if ing not in data["all_ingredients"]:
+            data["all_ingredients"].append(ing)
+
+try: 
+    file = open(filename, "wb")
     pickle.dump(data, file)
     file.close()
-    print("\n---\nFile updated and saved successfully.")
+    print("\nRecipes saved successfully ")
 
+except:
+    print("\n---\nAn error occured")
     
  
 
