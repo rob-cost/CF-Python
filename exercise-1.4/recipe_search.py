@@ -34,11 +34,11 @@ def search_ingredient(data):
 
 filename = input("Enter the file you want to upload: ")
 try:
-    file = open(filename, 'rb')
-    data = pickle.load(file)
-    print("\nFile uploaded successfully.")
-    print(data)
-except:
+    with open(filename, 'rb') as file:
+        data = pickle.load(file)
+        print("\nFile uploaded successfully.")
+        print(data)
+except FileNotFoundError:
     print("\nFile not found")
 else:
     search_ingredient(data)

@@ -56,9 +56,9 @@ def calc_difficulty(cooking_time, ingredients):
 
 filename = input("\nPlease enter the file you want to use: ")
 try:
-    file = open(filename, 'rb')
-    data = pickle.load(file)
-    print('\n---\nData loaded successfully.')
+    with open(filename, 'rb') as file:
+        data = pickle.load(file)
+        print('\n---\nData loaded successfully.')
 except FileNotFoundError:
     data = {"recipes_list" : [], "all_ingredients" : []}
     print(f"\n---\nFile not found. New data dictionary will be created and saved as {filename}.")
@@ -89,14 +89,12 @@ for i in range(n) :
         if ing not in data["all_ingredients"]:
             data["all_ingredients"].append(ing)
 
-try: 
-    file = open(filename, "wb")
-    pickle.dump(data, file)
-    file.close()
-    print("\nRecipes saved successfully ")
 
-except:
-    print("\n---\nAn error occured")
+with open(filename, "wb") as file:
+    pickle.dump(data, file)
+
+print("\nRecipes saved successfully ")
+
     
  
 
