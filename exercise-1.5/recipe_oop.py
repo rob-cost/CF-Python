@@ -13,10 +13,6 @@ class Recipe():
         output = "----------" "\nRecipe: " + str(self.name) + "\nCooking time: " + str(self.cooking_time) + "\nDifficulty: " + str(self.difficulty) + "\nIngredients: " + str(self.ingredients)
         return output
 
-    def get_recipe(self):
-        output = str(self.name) + " and " + int(self.cooking_time)
-        return output
-
     def add_ingredients(self, *ingredients):
             for ingredient in ingredients:
                 self.ingredients.append(ingredient)
@@ -64,5 +60,12 @@ recipes_list = [recipe_1, recipe_2, recipe_3, recipe_4]
 for recipe in recipes_list:
     print(recipe)
 
+print("\nList of all ingredients:", "\n------------")
+for i in Recipe.all_ingredients:
+    print("-", i)
+
 recipe_search()
+
+
+
 
