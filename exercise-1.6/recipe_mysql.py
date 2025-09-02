@@ -2,32 +2,30 @@ import mysql.connector
 from dotenv import load_dotenv
 import os 
 
-load_dotenv()
+def connect_to_database():
+    load_dotenv()
 
-# connect to database
-conn = mysql.connector.connect(
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD")
-)
-
-cursor = conn.cursor()
-
-cursor.execute("CREATE DATABASE IF NOT EXISTS task_database")
-cursor.execute("USE task_database")
-
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Recipes (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(50),
-        ingredients VARCHAR(255),
-        cooking_time INT,
-        difficulty VARCHAR(20)
+    conn = mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD")
     )
-""")
 
-conn.commit()
-print("\nDatabase and Table are ready to use!")
+    cursor = conn.cursor()
+    cursor.execute("CREATE DATABASE IF NOT EXISTS task_database")
+    cursor.execute("USE task_database")
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Recipes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(50),
+            ingredients VARCHAR(255),
+            cooking_time INT,
+            difficulty VARCHAR(20)
+        )
+    """)
+    conn.commit()
+    print("\nDatabase and Table are ready to use!")
+    return conn, cursor
 
 def get_name():
     while True:
@@ -66,7 +64,7 @@ def get_ingredients():
 
 
 # function to insert a recipe and save it in the DB
-def create_recipe():
+def create_recipe(conn, cursor):
 
     name = get_name()
 
@@ -85,7 +83,7 @@ def create_recipe():
     return
    
 # function to search for a recipe by an ingredient
-def search_recipe():
+def search_recipe(conn, cursor):
     cursor.execute("SELECT ingredients FROM Recipes")
     results = cursor.fetchall()
 
@@ -121,7 +119,7 @@ def search_recipe():
     return
 
 # function to update a certain recipe 
-def update_recipe():
+def update_recipe(conn, cursor):
     cursor.execute("SELECT id, name FROM Recipes")
     list_recipes = cursor.fetchall()
     print("\nID    Name") # print names of recipes with their ID
@@ -183,7 +181,7 @@ def update_recipe():
     return
 
 # function to delete a row from DB
-def delete_recipe():
+def delete_recipe(conn, cursor):
     query_select = "SELECT id, name FROM Recipes"
     query_delete = "DELETE FROM Recipes WHERE id = %s"
     cursor.execute(query_select)
@@ -243,7 +241,7 @@ def print_recipe(result):
          print("Difficulty:", row[4])
 
 
-def main_menu():   
+def main_menu(conn, cursor):   
     choice = ''
     while (choice != 'quit'):
         print('\nMain Menu')
@@ -257,16 +255,18 @@ def main_menu():
         choice = input("\nType your choice: ")
 
         if choice == "1":
-            create_recipe()
+            create_recipe(conn, cursor)
         elif choice == "2":
-            search_recipe()
+            search_recipe(conn, cursor)
         elif choice == "3":
-            update_recipe()
+            update_recipe(conn, cursor)
         elif choice == "4":
-            delete_recipe()
+            delete_recipe(conn, cursor)
         elif choice == "quit":
             conn.commit()
             conn.close()
-            print("Recipe saved")
+            print("\n ---- Recipe saved ----")
 
-main_menu()
+if __name__ == "__main__":           
+    conn, cursor = connect_to_database()
+    main_menu(conn, cursor)
